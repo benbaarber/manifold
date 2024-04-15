@@ -1,3 +1,5 @@
 manifold/data
 manifold/.models
 manifold/target
+
+.vscode/

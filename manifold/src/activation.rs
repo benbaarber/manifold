@@ -1,5 +1,4 @@
 use std::fmt::Debug;
-use std::rc::Rc;
 
 use ndarray::{Array2, Axis};
 use ndarray_stats::QuantileExt;
@@ -19,24 +18,24 @@ impl Debug for dyn Activation {
 pub struct Relu;
 
 impl Relu {
-    pub fn new() -> Rc<Relu> {
-        Rc::new(Relu)
+    pub fn new() -> Box<Relu> {
+        Box::new(Relu)
     }
 }
 
 impl Activation for Relu {
     fn a(&self, x: Array2<f64>) -> Array2<f64> {
-        x.map(|v| {
-            if *v < 0. {
+        x.map(|&v| {
+            if v < 0. {
                 return 0.;
             }
-            *v
+            v
         })
     }
 
     fn d(&self, x: Array2<f64>) -> Array2<f64> {
-        x.map(|v| {
-            if *v < 0. {
+        x.map(|&v| {
+            if v < 0. {
                 return 0.;
             }
             1.
@@ -47,8 +46,8 @@ impl Activation for Relu {
 pub struct Softmax;
 
 impl Softmax {
-    pub fn _new() -> Rc<Softmax> {
-        Rc::new(Softmax)
+    pub fn _new() -> Box<Softmax> {
+        Box::new(Softmax)
     }
 }
 
@@ -78,8 +77,8 @@ impl Activation for Softmax {
 pub struct Identity;
 
 impl Identity {
-    pub fn new() -> Rc<Identity> {
-        Rc::new(Identity)
+    pub fn new() -> Box<Identity> {
+        Box::new(Identity)
     }
 }
 
@@ -100,7 +99,7 @@ pub enum Activations {
 }
 
 impl Activations {
-    pub fn wake(&self) -> Rc<dyn Activation> {
+    pub fn wake(&self) -> Box<dyn Activation> {
         match self {
             Activations::Identity => Identity::new(),
             Activations::Relu => Relu::new(),
