@@ -6,7 +6,7 @@ use ndarray_rand::{
 
 use crate::Activations;
 
-/// Create a tensor with values drawn from a uniform distribution over the interval [a, b]
+/// Create a tensor with values drawn from a uniform distribution over the interval `[a, b]`
 pub fn uniform<D: Dimension>(shape: impl ShapeBuilder<Dim = D>, a: f64, b: f64) -> Array<f64, D> {
     let dist = Uniform::new_inclusive(a, b);
     Array::random(shape, dist)
@@ -86,11 +86,10 @@ pub fn kaiming_uniform<D: Dimension>(
     let (fan_in, _) = calculate_fans(shape)?;
     let gain = calculate_gain(activation);
     let a = gain * f64::sqrt(6.0 / fan_in);
-    let dist = Uniform::new_inclusive(-a, a);
-    Ok(Array::random(shape, dist))
+    Ok(uniform(shape, -a, a))
 }
 
-/// Create a tensor with values drawn from a Kaiming uniform distribution
+/// Create a tensor with values drawn from a Kaiming normal distribution
 ///
 /// Recommended for use with ReLU or Leaky ReLU activation functions.
 pub fn kaiming_normal<D: Dimension>(
@@ -100,6 +99,5 @@ pub fn kaiming_normal<D: Dimension>(
     let (fan_in, _) = calculate_fans(shape)?;
     let gain = calculate_gain(activation);
     let sd = gain * f64::sqrt(2.0 / fan_in);
-    let dist = Normal::new(0.0, sd).unwrap();
-    Ok(Array::random(shape, dist))
+    Ok(normal(shape, 0.0, sd))
 }

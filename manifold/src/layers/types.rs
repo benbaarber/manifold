@@ -1,12 +1,12 @@
 use super::Dense;
 use crate::{Activations, Substrate};
-use ndarray::{Array1, Array2, Array3};
+use ndarray::{Array, Array1, Array2, Array3, Dimension, Ix3};
 use serde::{Deserialize, Serialize};
 
-pub trait IsolatedLayer {
-    fn forward(&mut self, x: Array3<f64>) -> Array3<f64>;
-    fn backward(&mut self, grad_output: Array3<f64>) -> Array3<f64>;
-    fn gradients(&self) -> (Array2<f64>, Array1<f64>);
+pub trait IsolatedLayer<D: Dimension = Ix3> {
+    fn forward(&mut self, x: Array<f64, D>) -> Array<f64, D>;
+    fn backward(&mut self, grad_output: Array<f64, D>) -> Array<f64, D>;
+    fn gradients(&self) -> (Array<f64, D>, Array1<f64>);
 }
 
 pub trait Layer {
